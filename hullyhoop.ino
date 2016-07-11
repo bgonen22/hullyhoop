@@ -11,7 +11,7 @@ int colors[][3] = {{50,0,0},
                     
 
 #define SIZE_OF_RECTANGLE 4
-#define REC_DELAY 500
+#define REC_DELAY 200
 
 #define SIZE_OF_RHOMBUSE 5 //(MEUYAN) how many rows it will contain:
 // Example of 5
@@ -20,7 +20,7 @@ int colors[][3] = {{50,0,0},
 // *   *  3 
 //  * *   4 
 //   *    5 
-
+#define RHOMBUS_DELAY 50
 #define PATTERN_TIME 10000
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
@@ -32,7 +32,7 @@ void setup() {
 
 void loop() {
   rectangle();
- // rhombus(); //MEUYAN
+  rhombus(); //MEUYAN
 
 
 
@@ -70,7 +70,7 @@ void rectangle () {
       delay(REC_DELAY);
       rectangle_time+=REC_DELAY;
     } 
- //   Serial.println(rectangle_time);
+  //  Serial.println(rectangle_time);
   }
 }
 //-------------------------------
@@ -78,21 +78,16 @@ void draw_rhombuse (int color[3],int start) {
 //-------------------------------
   int led,led2;
   for (int i = 0; i <(NUMPIXELS/(2*(SIZE_OF_RHOMBUSE)))+0.5; ++i) {
-    for (int j=start;j<SIZE_OF_RECTANGLE+start;++j) {
-      if (j <= SIZE_OF_RECTANGLE/2) {
-        led = SIZE_OF_RECTANGLE/2+j;
-        led2 = SIZE_OF_RECTANGLE/2-j;
-      } else {
-        int new_j = SIZE_OF_RECTANGLE/2 - j;
-        led = SIZE_OF_RECTANGLE/2+new_j;
-        led2 = SIZE_OF_RECTANGLE/2-new_j;        
-      }
-      Serial.println(led);
-      Serial.println(led2);
-
-   //   pixels.setPixelColor(i*2*SIZE_OF_RHOMBUSE+led,pixels.Color(color[0],color[1],color[2]));
-      pixels.setPixelColor(i*2*SIZE_OF_RHOMBUSE+led2,pixels.Color(color[0],color[1],color[2]));
+    if (start <= SIZE_OF_RHOMBUSE/2) {
+      led = SIZE_OF_RHOMBUSE/2+start;
+      led2 = SIZE_OF_RHOMBUSE/2-start;
+    } else {
+      int new_start = SIZE_OF_RHOMBUSE - 1 -start ;
+      led = SIZE_OF_RHOMBUSE/2+new_start;
+      led2 = SIZE_OF_RHOMBUSE/2-new_start;        
     }
+    pixels.setPixelColor(i*2*SIZE_OF_RHOMBUSE+led,pixels.Color(color[0],color[1],color[2]));
+    pixels.setPixelColor(i*2*SIZE_OF_RHOMBUSE+led2,pixels.Color(color[0],color[1],color[2]));
   }
   pixels.show();   
 }
@@ -105,8 +100,8 @@ void rhombus () {
       for (int start = 0; start<SIZE_OF_RHOMBUSE; ++start) {
         clear_all();
         draw_rhombuse(colors[color_idx],start);
-        delay(50);
-        rhombus_time+=50;
+        delay(RHOMBUS_DELAY);
+        rhombus_time+=RHOMBUS_DELAY;
       }
     }
       
